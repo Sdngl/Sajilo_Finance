@@ -8,9 +8,10 @@ import { SavingGoalModel } from "@/lib/models/SavingGoal";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const body = await request.json();
     const { amount } = body;
 
@@ -27,7 +28,7 @@ export async function PATCH(
     }
 
     const updated = await SavingGoalModel.findByIdAndUpdate(
-      params.id,
+      id,
       { $inc: { current: Number(amount) } },
       { new: true }
     );

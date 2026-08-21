@@ -19,19 +19,19 @@ export default function Hero() {
         <div className="mt-9 flex flex-wrap gap-3">
           <Link
             href="/register"
-            className="flex items-center gap-2 rounded-xl bg-[#139b70] px-5 py-3.5 text-sm font-semibold text-white"
+            className="flex items-center gap-2 rounded-xl bg-[#139b70] px-5 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#108560] hover:shadow-lg hover:shadow-emerald-900/20 active:scale-95"
           >
             Get started <ArrowRight size={16} />
           </Link>
           <a
             href="#features"
-            className="rounded-xl border border-[#d8e5df] bg-white px-5 py-3.5 text-sm font-semibold"
+            className="rounded-xl border border-[#d8e5df] bg-white px-5 py-3.5 text-sm font-semibold transition-all duration-200 hover:border-emerald-300 hover:bg-[#f5f8f7] hover:shadow-sm"
           >
             Explore features
           </a>
         </div>
       </div>
-      <div className="rounded-[28px] bg-[#102a27] p-4 shadow-2xl md:p-6">
+      <div className="rounded-[28px] bg-[#102a27] p-4 shadow-2xl md:p-6 transition-all duration-300 hover:shadow-emerald-950/40">
         <div className="rounded-2xl bg-[#f7faf8] p-5 md:p-7">
           <div className="flex items-center justify-between">
             <div>
@@ -42,17 +42,17 @@ export default function Hero() {
               NS
             </div>
           </div>
-          <div className="mt-6 rounded-2xl bg-[#dff5e9] p-5">
+          <div className="mt-6 rounded-2xl bg-[#dff5e9] p-5 transition-transform duration-300 hover:scale-[1.01]">
             <p className="text-xs text-[#4a7568]">Total balance</p>
             <p className="mt-1 text-3xl font-bold">Rs. 84,250.00</p>
             <p className="mt-4 text-xs text-[#139b70]">+12.8% this month</p>
           </div>
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-[#e7eeeb] bg-white p-4">
+            <div className="rounded-xl border border-[#e7eeeb] bg-white p-4 transition-all duration-200 hover:border-emerald-300 hover:shadow-md">
               <p className="text-[11px] text-[#71817b]">Monthly income</p>
               <p className="mt-2 font-bold">Rs. 48,000</p>
             </div>
-            <div className="rounded-xl border border-[#e7eeeb] bg-white p-4">
+            <div className="rounded-xl border border-[#e7eeeb] bg-white p-4 transition-all duration-200 hover:border-emerald-300 hover:shadow-md">
               <p className="text-[11px] text-[#71817b]">Financial health</p>
               <p className="mt-2 font-bold">78 / 100</p>
             </div>
