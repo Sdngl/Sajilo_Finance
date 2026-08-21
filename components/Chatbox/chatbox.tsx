@@ -225,152 +225,164 @@ export default function ChatBox() {
 
   return (
     <>
-      {/* ====================================
-          CHAT WINDOW
-      ==================================== */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 z-50 flex h-[630px] w-[360px] flex-col overflow-hidden rounded-[40px] border border-white/10 bg-[#070b14] text-white shadow-[0_25px_70px_rgba(0,0,0,0.8)] backdrop-blur-3xl font-sans sm:right-6">
-          
-          {/* TOP NAV BAR */}
-          <div className="flex items-center justify-between px-6 pt-6 pb-2">
-            <button
-              onClick={closeChat}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/70 transition hover:bg-white/10"
-            >
-              ←
-            </button>
+        <div className="fixed bottom-24 right-4 z-50 flex h-[620px] w-[370px] flex-col overflow-hidden rounded-[28px] border border-[#dce9e4] bg-[#f8fbfa] text-[#153a33] shadow-[0_24px_70px_rgba(15,55,47,0.22)] font-sans sm:right-6">
 
-            {/* Mode Switch Pills */}
-            <div className="flex items-center gap-1 rounded-full bg-black/40 p-1 border border-white/10">
+          {/* HEADER */}
+          <div className="border-b border-[#e3eeea] bg-white/95 px-5 py-4">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={closeChat}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e2ebe8] bg-white text-[#54706a] transition hover:bg-[#f1f7f4]"
+              >
+                ←
+              </button>
+
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e5f5ef] text-sm text-[#159a72]">
+                  ✦
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#153a33]">NepalFi</p>
+                  <p className="text-[10px] text-[#78908a]">Your money assistant</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => changeChatMode(chatMode === "voice" ? "text" : "voice")}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e2ebe8] bg-white text-[#54706a] transition hover:bg-[#f1f7f4]"
+              >
+                {chatMode === "voice" ? "⌨" : "◉"}
+              </button>
+            </div>
+
+            {/* MODE SWITCH */}
+            <div className="mt-4 flex rounded-xl bg-[#f1f6f4] p-1">
               <button
                 onClick={() => changeChatMode("voice")}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition ${
                   chatMode === "voice"
-                    ? "bg-white/20 text-white"
-                    : "text-white/40 hover:text-white"
+                    ? "bg-white text-[#159a72] shadow-sm"
+                    : "text-[#7b918b] hover:text-[#31564e]"
                 }`}
               >
                 Voice
               </button>
               <button
                 onClick={() => changeChatMode("text")}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition ${
                   chatMode === "text"
-                    ? "bg-white/20 text-white"
-                    : "text-white/40 hover:text-white"
+                    ? "bg-white text-[#159a72] shadow-sm"
+                    : "text-[#7b918b] hover:text-[#31564e]"
                 }`}
               >
                 Text
               </button>
             </div>
-
-            <button 
-              onClick={() => changeChatMode(chatMode === "voice" ? "text" : "voice")}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/70 hover:bg-white/10"
-            >
-              💬
-            </button>
           </div>
 
-          {/* ERROR ALERT */}
           {voiceError && (
-            <div className="mx-6 mt-2 rounded-2xl bg-red-500/10 border border-red-500/20 px-3 py-2 text-center text-xs text-red-300">
+            <div className="mx-5 mt-3 rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-center text-xs text-red-600">
               {voiceError}
             </div>
           )}
 
-          {/* ====================================
-              VOICE MODE SCREEN
-          ==================================== */}
           {chatMode === "voice" ? (
-            <div className="flex flex-1 flex-col items-center justify-between p-6">
-              
-              {/* Header Status */}
+            <div className="flex flex-1 flex-col items-center justify-between px-6 py-8">
               <div className="text-center">
-                <span className="text-xs font-medium tracking-wide text-white/50">
-                  {isListening ? "Listening..." : loading ? "Thinking..." : "Tap orb to speak"}
-                </span>
+                <p className="text-xs font-semibold text-[#159a72]">
+                  {isListening ? "Listening..." : loading ? "Thinking..." : "Ask NepalFi"}
+                </p>
+                <p className="mt-1 text-[11px] text-[#82958f]">
+                  Your personal financial companion
+                </p>
               </div>
 
-              {/* Glowing Iridescent AI Orb */}
-              <div 
+              {/* GREEN FINTECH ORB */}
+              <div
                 onClick={startListening}
                 className="relative flex cursor-pointer items-center justify-center"
               >
-                {/* Glow rings */}
-                <div className={`absolute h-48 w-48 rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 blur-2xl opacity-50 transition-all duration-700 ${
-                  isListening ? "scale-125 opacity-80 animate-pulse" : "scale-100"
-                }`} />
-                
-                <div className={`absolute h-40 w-40 rounded-full bg-gradient-to-br from-pink-500 via-purple-600 to-blue-600 blur-xl opacity-40 transition-transform duration-500 ${
-                  isListening ? "rotate-180 scale-110" : "rotate-0"
-                }`} />
-
-                {/* Inner Metallic Glass Sphere */}
-                <div className="relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-tr from-[#131b2e] via-[#2c1d47] to-[#0d3b66] shadow-[inset_0_2px_15px_rgba(255,255,255,0.4),0_10px_30px_rgba(0,0,0,0.8)] border border-white/20">
-                  <div className="absolute inset-2 rounded-full bg-gradient-to-br from-cyan-400/30 via-indigo-500/20 to-pink-500/40 blur-md" />
-                  <div className="absolute top-4 left-6 h-10 w-16 rounded-full bg-white/20 blur-sm transform -rotate-45" />
-                  
-                  {/* Waveform indicator when listening */}
-                  {isListening && (
-                    <div className="flex items-center gap-1 z-10">
-                      <span className="h-6 w-1 rounded-full bg-white animate-bounce [animation-delay:0ms]" />
-                      <span className="h-10 w-1 rounded-full bg-white animate-bounce [animation-delay:150ms]" />
-                      <span className="h-4 w-1 rounded-full bg-white animate-bounce [animation-delay:300ms]" />
+                <div
+                  className={`absolute h-44 w-44 rounded-full bg-[#19a477]/20 blur-2xl transition-all duration-700 ${
+                    isListening ? "scale-125 opacity-100 animate-pulse" : "scale-100 opacity-80"
+                  }`}
+                />
+                <div
+                  className={`absolute h-36 w-36 rounded-full bg-[#b9ead9]/60 transition-transform duration-700 ${
+                    isListening ? "scale-110 rotate-12" : ""
+                  }`}
+                />
+                <div className="relative flex h-32 w-32 items-center justify-center rounded-full border border-white bg-gradient-to-br from-[#0f3f35] via-[#146b59] to-[#19a477] shadow-[0_18px_45px_rgba(21,121,96,0.3)]">
+                  <div className="absolute inset-3 rounded-full border border-white/10" />
+                  {isListening ? (
+                    <div className="z-10 flex items-center gap-1">
+                      <span className="h-5 w-1 rounded-full bg-white animate-bounce [animation-delay:0ms]" />
+                      <span className="h-9 w-1 rounded-full bg-white animate-bounce [animation-delay:150ms]" />
+                      <span className="h-6 w-1 rounded-full bg-white animate-bounce [animation-delay:300ms]" />
                       <span className="h-8 w-1 rounded-full bg-white animate-bounce [animation-delay:100ms]" />
                     </div>
+                  ) : (
+                    <span className="text-3xl text-white">◉</span>
                   )}
                 </div>
               </div>
 
-              {/* Live Transcript Display */}
-              <div className="w-full text-center px-4">
-                <p className="text-sm leading-relaxed text-white/90 font-light max-h-20 overflow-y-auto">
+              <div className="w-full rounded-2xl border border-[#e0ece8] bg-white px-5 py-4 text-center shadow-sm">
+                <p className="max-h-20 overflow-y-auto text-sm leading-relaxed text-[#31534c]">
                   {input || (isListening ? "Listening to your voice..." : "Tap the microphone to ask anything")}
                 </p>
               </div>
 
-              {/* Voice Action Controls */}
-              <div className="flex w-full items-center justify-between px-6 pt-2 pb-2">
-                <button 
+              <div className="flex w-full items-center justify-center gap-5 pt-2">
+                <button
                   onClick={() => setInput("")}
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#dce9e4] bg-white text-[#708780] shadow-sm transition hover:bg-[#f1f7f4]"
                 >
-                  🔍
+                  ⌫
                 </button>
 
                 <button
                   onClick={startListening}
-                  className={`flex h-14 w-14 items-center justify-center rounded-full shadow-lg border transition-all duration-300 ${
+                  className={`flex h-16 w-16 items-center justify-center rounded-full border-4 border-white shadow-[0_10px_30px_rgba(21,154,114,0.28)] transition-all duration-300 ${
                     isListening
-                      ? "bg-red-500 border-red-400 text-white scale-110 shadow-red-500/50"
-                      : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      ? "scale-110 bg-[#d95c5c] text-white"
+                      : "bg-[#159a72] text-white hover:scale-105"
                   }`}
                 >
-                  🎙️
+                  ◉
                 </button>
 
                 <button
                   onClick={closeChat}
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-[#dce9e4] bg-white text-[#708780] shadow-sm transition hover:bg-[#f1f7f4]"
                 >
                   ✕
                 </button>
               </div>
-
             </div>
           ) : (
-            
-            /* ====================================
-                TEXT CHAT MODE SCREEN
-            ==================================== */
-            <div className="flex flex-1 flex-col justify-between overflow-hidden">
-              
-              {/* Messages Container */}
-              <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
+            <div className="flex flex-1 flex-col overflow-hidden bg-[#f8fbfa]">
+
+              {/* CHAT INTRO */}
+              <div className="border-b border-[#e5efeb] bg-white px-5 py-4">
+                <p className="text-xs font-medium text-[#80958e]">NepalFi assistant</p>
+                <p className="mt-1 text-sm font-semibold text-[#183c34]">
+                  How can I help with your money today?
+                </p>
+              </div>
+
+              {/* MESSAGES */}
+              <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
                 {messages.length === 0 ? (
-                  <div className="flex h-full flex-col items-center justify-center text-center text-white/30 text-xs">
-                    <span>No messages yet. Ask something below!</span>
+                  <div className="flex h-full flex-col items-center justify-center text-center">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#e4f5ee] text-[#159a72]">
+                      ✦
+                    </div>
+                    <p className="text-sm font-semibold text-[#31564e]">Start a conversation</p>
+                    <p className="mt-1 max-w-[220px] text-xs leading-relaxed text-[#8a9d97]">
+                      Ask about saving, spending, budgeting, or managing your business.
+                    </p>
                   </div>
                 ) : (
                   messages.map((message, index) => (
@@ -380,43 +392,40 @@ export default function ChatBox() {
                         message.role === "user" ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {/* Assistant Avatar */}
                       {message.role === "assistant" && (
-                        <div className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-400 p-0.5 shadow-md">
-                          <div className="h-full w-full rounded-full bg-[#0d1322]" />
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#dff4eb] text-xs font-bold text-[#159a72]">
+                          N
                         </div>
                       )}
 
-                      <div className="flex flex-col gap-1 max-w-[80%]">
+                      <div className="flex max-w-[80%] flex-col gap-1">
                         <div
                           className={`rounded-2xl px-4 py-3 text-xs leading-relaxed ${
                             message.role === "user"
-                              ? "bg-gradient-to-r from-blue-600/80 to-cyan-600/80 text-white border border-cyan-400/20 shadow-lg rounded-br-xs"
-                              : "bg-[#131b2e]/80 text-white/90 border border-white/10 backdrop-blur-md rounded-bl-xs"
+                              ? "rounded-br-md bg-[#159a72] text-white shadow-sm"
+                              : "rounded-bl-md border border-[#e1ece8] bg-white text-[#31534c] shadow-sm"
                           }`}
                         >
                           {message.content}
                         </div>
 
-                        {/* Action icons for assistant responses */}
                         {message.role === "assistant" && (
-                          <div className="flex items-center gap-3 px-1 pt-1 text-[11px] text-white/30">
-                            <button className="hover:text-white transition">👍</button>
-                            <button className="hover:text-white transition">👎</button>
-                            <button 
-                              onClick={() => speakResponse(message.content)} 
-                              className="hover:text-white transition"
+                          <div className="flex items-center gap-3 px-1 pt-1 text-[11px] text-[#a0b0ab]">
+                            <button className="transition hover:text-[#159a72]">👍</button>
+                            <button className="transition hover:text-[#159a72]">👎</button>
+                            <button
+                              onClick={() => speakResponse(message.content)}
+                              className="transition hover:text-[#159a72]"
                             >
                               🔊
                             </button>
-                            <button className="hover:text-white transition">🔄</button>
+                            <button className="transition hover:text-[#159a72]">↻</button>
                           </div>
                         )}
                       </div>
 
-                      {/* User Avatar */}
                       {message.role === "user" && (
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-[10px] font-bold text-white shadow-md">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#153a33] text-[10px] font-bold text-white">
                           U
                         </div>
                       )}
@@ -424,68 +433,69 @@ export default function ChatBox() {
                   ))
                 )}
 
-                {/* Thinking Indicator */}
                 {loading && (
-                  <div className="flex items-center gap-2 text-xs text-white/40 pl-8">
+                  <div className="flex items-center gap-2 pl-9 text-xs text-[#8da19b]">
                     <span className="flex gap-1">
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white/40" />
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white/40 [animation-delay:150ms]" />
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white/40 [animation-delay:300ms]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#159a72]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#159a72] [animation-delay:150ms]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#159a72] [animation-delay:300ms]" />
                     </span>
+                    NepalFi is thinking...
                   </div>
                 )}
               </div>
 
-              {/* Input Capsule */}
-              <div className="p-4">
-                <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#131b2e]/90 px-4 py-2 shadow-inner focus-within:border-cyan-500/40">
-                  <span className="text-white/30 text-sm">+</span>
-                  
+              {/* INPUT */}
+              <div className="border-t border-[#e2ede9] bg-white p-4">
+                <div className="flex items-center gap-2 rounded-2xl border border-[#dce9e4] bg-[#f8fbfa] px-3 py-2 transition focus-within:border-[#159a72]/50 focus-within:ring-4 focus-within:ring-[#159a72]/5">
+                  <span className="text-lg text-[#8ba19a]">+</span>
+
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") sendMessage();
                     }}
-                    placeholder="Type your message..."
-                    className="flex-1 bg-transparent text-xs text-white placeholder-white/30 outline-none"
+                    placeholder="Ask NepalFi anything..."
+                    className="flex-1 bg-transparent px-1 text-xs text-[#25483f] placeholder-[#9aaba6] outline-none"
                   />
 
                   <button
                     onClick={startListening}
-                    className="text-white/40 hover:text-white text-xs transition"
+                    className="text-[#6f8780] transition hover:text-[#159a72]"
                   >
-                    🎙️
+                    ◉
                   </button>
 
                   <button
                     onClick={sendMessage}
                     disabled={!input.trim() || loading}
-                    className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-500 text-black text-xs font-bold transition disabled:opacity-30 hover:scale-105"
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#159a72] text-sm font-bold text-white transition hover:bg-[#118763] hover:scale-105 disabled:opacity-30"
                   >
-                    ➤
+                    ↑
                   </button>
                 </div>
+                <p className="mt-2 text-center text-[9px] text-[#a0b0ab]">
+                  NepalFi can make mistakes. Check important financial information.
+                </p>
               </div>
-
             </div>
           )}
-
         </div>
       )}
 
       {/* FLOATING LAUNCH BUTTON */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[#070b14] text-xl text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition duration-300 hover:scale-110"
+        className={`fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-[#159a72] text-xl text-white shadow-[0_12px_35px_rgba(21,154,114,0.3)] transition duration-300 hover:scale-110 ${
+          isOpen ? "bg-[#153a33]" : ""
+        }`}
       >
         {isOpen ? "✕" : "✦"}
       </button>
     </>
   );
 }
-
-
 
 
 // How i build it
