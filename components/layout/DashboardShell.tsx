@@ -17,10 +17,11 @@ import {
   Building2,
   X,
   LogOut,
+  Landmark,
 } from "lucide-react";
 const items = [
   ["Overview", "/dashboard", LayoutDashboard],
-  ["Payments", "/dashboard/payments", WalletCards],
+  ["Manage Accounts", "/dashboard/accounts", Landmark],
   ["Savings", "/dashboard/savings", WalletCards],
   ["Business", "/dashboard/business", Building2],
   ["Financial Literacy", "/dashboard/literacy", BookOpen],
