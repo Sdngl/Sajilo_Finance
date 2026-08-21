@@ -54,7 +54,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-medium ${path === href || (href != "/dashboard" && path.startsWith(href)) ? "bg-[#1b574d] text-white" : "text-[#aec0bb] hover:bg-[#163d38] hover:text-white"}`}
+              className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-medium transition-all duration-200 ${path === href || (href != "/dashboard" && path.startsWith(href)) ? "bg-[#1b574d] text-white shadow-lg shadow-emerald-900/20" : "text-[#aec0bb] hover:bg-[#163d38] hover:text-white hover:translate-x-1"}`}
             >
               <Icon size={17} />
               {label}
@@ -65,15 +65,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             Support
           </p>
           <Link
-            href="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb]"
+            href="/dashboard/settings"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb] transition-all duration-200 hover:bg-[#163d38] hover:text-white hover:translate-x-1"
           >
             <Settings size={17} />
             Settings
           </Link>
           <Link
-            href="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb]"
+            href="/dashboard/help"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb] transition-all duration-200 hover:bg-[#163d38] hover:text-white hover:translate-x-1"
           >
             <HelpCircle size={17} />
             Help center
@@ -108,14 +108,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             />
           </div>
           <div className="flex items-center gap-5">
-            <button className="relative text-[#71817b]">
+            <button className="relative text-[#71817b] transition-all duration-200 hover:text-[#139b70] hover:scale-110">
               <Bell size={19} />
               <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-[#f8faf9]" />
             </button>
             <div className="relative">
               <button
                 onClick={() => setProfile(!profile)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 transition-all duration-200 hover:scale-105"
               >
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d5eee5] text-xs font-bold text-[#138862]">
                   NS
@@ -127,7 +127,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   <p className="px-3 py-2 text-xs font-semibold">
                     Navin Shrestha
                   </p>
-                  <button className="flex w-full gap-2 rounded-lg px-3 py-2 text-left text-xs text-red-500 hover:bg-red-50">
+                  <button onClick={() => window.location.href = "/login"} className="flex w-full gap-2 rounded-lg px-3 py-2 text-left text-xs text-red-500 hover:bg-red-50">
                     <LogOut size={14} />
                     Sign out
                   </button>
