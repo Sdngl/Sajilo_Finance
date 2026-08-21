@@ -34,6 +34,7 @@ const features = [
 export default function SmeFeaturesPage() {
   return (
     <main className="min-h-screen bg-[#f8faf9]">
+     
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Link href="/" className="text-xl font-bold">
           nepal<span className="text-[#139b70]">fi</span>
