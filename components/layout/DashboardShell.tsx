@@ -59,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-medium ${path === href || (href != "/dashboard" && path.startsWith(href)) ? "bg-[#1b574d] text-white" : "text-[#aec0bb] hover:bg-[#163d38] hover:text-white"}`}
+              className={`mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-medium transition-all duration-200 ${path === href || (href != "/dashboard" && path.startsWith(href)) ? "bg-[#1b574d] text-white shadow-lg shadow-emerald-900/20" : "text-[#aec0bb] hover:bg-[#163d38] hover:text-white hover:translate-x-1"}`}
             >
               <Icon size={17} />
               {label}
@@ -70,15 +70,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             Support
           </p>
           <Link
-            href="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb]"
+            href="/dashboard/settings"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb] transition-all duration-200 hover:bg-[#163d38] hover:text-white hover:translate-x-1"
           >
             <Settings size={17} />
             Settings
           </Link>
           <Link
-            href="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb]"
+            href="/dashboard/help"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] text-[#aec0bb] transition-all duration-200 hover:bg-[#163d38] hover:text-white hover:translate-x-1"
           >
             <HelpCircle size={17} />
             Help center
@@ -113,72 +113,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             />
           </div>
           <div className="flex items-center gap-5">
-            <div className="relative">
-              <button 
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="relative text-[#71817b] hover:text-[#138862] transition-colors"
-              >
-                <Bell size={19} />
-                <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-[#f8faf9]" />
-              </button>
-              
-              {notificationsOpen && (
-                <div className="absolute right-0 top-12 w-80 md:w-96 rounded-2xl border border-[#e7eeeb] bg-white shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
-                  <div className="flex items-center justify-between border-b border-[#e7eeeb] bg-[#f8faf9] px-4 py-3">
-                    <h3 className="font-semibold text-[#102a27]">Notifications</h3>
-                    <div className="flex gap-2">
-                      <button className="text-xs font-medium text-[#138862] hover:text-[#0f6b4d]">Mark all read</button>
-                    </div>
-                  </div>
-                  <div className="max-h-[400px] overflow-y-auto">
-                    {/* Activity 1 */}
-                    <div className="flex gap-3 border-b border-[#f1f5f3] p-4 bg-[#f4fbf8] hover:bg-[#ebf7f3] transition-colors cursor-pointer">
-                      <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
-                        <CheckCircle2 size={16} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[#102a27]">Deposit Successful</p>
-                        <p className="text-xs text-[#71817b] mt-0.5">Your deposit of $500.00 has been confirmed.</p>
-                        <p className="text-[10px] text-[#9aa9a4] mt-1 flex items-center gap-1"><Clock size={10} /> 2 mins ago</p>
-                      </div>
-                      <div className="h-2 w-2 rounded-full bg-emerald-500 mt-2"></div>
-                    </div>
-                    
-                    {/* Activity 2 */}
-                    <div className="flex gap-3 border-b border-[#f1f5f3] p-4 bg-[#f4fbf8] hover:bg-[#ebf7f3] transition-colors cursor-pointer">
-                      <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-orange-100 text-orange-600">
-                        <AlertCircle size={16} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[#102a27]">Security Alert</p>
-                        <p className="text-xs text-[#71817b] mt-0.5">Unrecognized login from a new device.</p>
-                        <p className="text-[10px] text-[#9aa9a4] mt-1 flex items-center gap-1"><Clock size={10} /> 1 hour ago</p>
-                      </div>
-                      <div className="h-2 w-2 rounded-full bg-orange-500 mt-2"></div>
-                    </div>
-
-                    {/* Activity 3 */}
-                    <div className="flex gap-3 p-4 hover:bg-[#f8faf9] transition-colors cursor-pointer">
-                      <div className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-blue-100 text-blue-600">
-                        <Info size={16} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[#102a27]">System Update</p>
-                        <p className="text-xs text-[#71817b] mt-0.5">We've added new features to the What-if Simulator.</p>
-                        <p className="text-[10px] text-[#9aa9a4] mt-1 flex items-center gap-1"><Clock size={10} /> 1 day ago</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-t border-[#e7eeeb] p-2 text-center bg-[#f8faf9]">
-                    <button className="text-xs font-medium text-[#71817b] hover:text-[#102a27]">View all notifications</button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <button className="relative text-[#71817b] transition-all duration-200 hover:text-[#139b70] hover:scale-110">
+              <Bell size={19} />
+              <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-[#f8faf9]" />
+            </button>
             <div className="relative">
               <button
                 onClick={() => setProfile(!profile)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 transition-all duration-200 hover:scale-105"
               >
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d5eee5] text-xs font-bold text-[#138862]">
                   NS
@@ -190,7 +132,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   <p className="px-3 py-2 text-xs font-semibold">
                     Navin Shrestha
                   </p>
-                  <button className="flex w-full gap-2 rounded-lg px-3 py-2 text-left text-xs text-red-500 hover:bg-red-50">
+                  <button onClick={() => window.location.href = "/login"} className="flex w-full gap-2 rounded-lg px-3 py-2 text-left text-xs text-red-500 hover:bg-red-50">
                     <LogOut size={14} />
                     Sign out
                   </button>
