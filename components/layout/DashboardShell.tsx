@@ -18,6 +18,10 @@ import {
   X,
   LogOut,
   Landmark,
+  CheckCircle2,
+  AlertCircle,
+  Info,
+  Clock,
 } from "lucide-react";
 const items = [
   ["Overview", "/dashboard", LayoutDashboard],
@@ -32,6 +36,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#f8faf9]">
       <aside

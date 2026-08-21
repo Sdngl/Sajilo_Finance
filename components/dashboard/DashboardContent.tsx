@@ -111,6 +111,8 @@ export default function DashboardContent() {
   const [smeProducts, setSmeProducts] = useState<SmeProductItem[]>([]);
   const [smeSales, setSmeSales] = useState<number>(0);
   const [smeExpenses, setSmeExpenses] = useState<number>(0);
+  // Maps local temp IDs to real MongoDB _ids for savings goals
+  const [goalIdMap, setGoalIdMap] = useState<Record<string, string>>({});
 
   // Modals state
   const [showAddAccount, setShowAddAccount] = useState(false);
@@ -158,7 +160,65 @@ export default function DashboardContent() {
         }
       })
       .catch(() => {});
+
+    fetch("/api/reminders")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setReminders(
+            data.data.map((r: any) => ({
+              id: r._id || r.id,
+              title: r.title,
+              amount: r.amount,
+              dueDate: r.dueDate,
+              type: r.type,
+              partyName: r.partyName,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/savings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setSavingsGoals(
+            data.data.map((g: any) => ({
+              id: g._id || g.id,
+              name: g.name,
+              target: g.target,
+              current: g.current || 0,
+              deadline: g.deadline,
+              monthly: g.monthly || `Rs. ${Math.ceil(g.target / 12).toLocaleString()}`,
+              category: g.category || "Micro-Savings",
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/sme/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setSmeProducts(
+            data.data.map((p: any) => ({
+              id: p._id || p.id,
+              name: p.name,
+              sku: p.sku,
+              category: p.category,
+              stock: p.stock,
+              price: p.price,
+              numericPrice: p.numericPrice,
+              status: p.status,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
   }, []);
+
 
   // Dynamic Calculated Totals starting strictly at 0
   const totalBalance = useMemo(
@@ -308,13 +368,28 @@ export default function DashboardContent() {
     } catch (e) {}
   };
 
-  const handleAddReminder = (data: Omit<ReminderItem, "id">) => {
+  const handleAddReminder = async (data: Omit<ReminderItem, "id">) => {
     const remItem: ReminderItem = {
       id: `rem-${Date.now()}`,
       ...data,
     };
     setReminders((prev) => [...prev, remItem]);
     setShowAddReminder(false);
+
+    try {
+      const res = await fetch("/api/reminders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const saved = await res.json();
+      if (saved.success && saved.data?._id) {
+        // Replace temp id with real MongoDB _id
+        setReminders((prev) =>
+          prev.map((r) => (r.id === remItem.id ? { ...r, id: saved.data._id } : r))
+        );
+      }
+    } catch (e) {}
   };
 
   const handleAddGoal = async (data: { name: string; target: number; deadline: string }) => {
@@ -330,19 +405,34 @@ export default function DashboardContent() {
     setSavingsGoals((prev) => [...prev, goal]);
 
     try {
-      await fetch("/api/savings", {
+      const res = await fetch("/api/savings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(goal),
       });
+      const saved = await res.json();
+      if (saved.success && saved.data?._id) {
+        setGoalIdMap((prev) => ({ ...prev, [goal.id]: saved.data._id }));
+      }
     } catch (e) {}
   };
 
-  const handleDepositGoal = (goalId: string, amount: number) => {
+  const handleDepositGoal = async (goalId: string, amount: number) => {
     setSavingsGoals((prev) =>
       prev.map((g) => (g.id === goalId ? { ...g, current: g.current + amount } : g))
     );
+
+    try {
+      // Use MongoDB _id if available, otherwise use local id
+      const mongoId = goalIdMap[goalId] || goalId;
+      await fetch(`/api/savings/${mongoId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+    } catch (e) {}
   };
+
 
   const handleAddSmeProduct = async (prod: Omit<SmeProductItem, "id">) => {
     const item: SmeProductItem = {
