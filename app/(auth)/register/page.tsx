@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -8,9 +8,11 @@ import {
   updateProfile,
   GoogleAuthProvider,
   signInWithPopup,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import { logUserActivity } from "@/lib/services/activityService";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -18,10 +20,21 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [accountType, setAccountType] = useState("Personal account");
   const [error, setError] = useState("");
+  const [isEmailExists, setIsEmailExists] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const router = useRouter();
+
+  // Redirect to dashboard if user is already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace("/dashboard");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   // ========================================
   // EMAIL / PASSWORD REGISTER
@@ -30,6 +43,7 @@ export default function Register() {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setIsEmailExists(false);
     setLoading(true);
 
     if (password.length < 8) {
@@ -49,19 +63,34 @@ export default function Register() {
       const user = userCredential.user;
 
       // 2. Update Display Name in Firebase Auth
-      await updateProfile(user, {
-        displayName: fullName,
-      });
+      try {
+        await updateProfile(user, {
+          displayName: fullName,
+        });
+      } catch (pErr) {
+        console.error("Error updating profile display name:", pErr);
+      }
 
       // 3. Save additional user details in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        fullName,
-        email,
-        accountType,
-        provider: "email",
-        createdAt: new Date().toISOString(),
-      });
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          fullName,
+          email,
+          accountType,
+          provider: "email",
+          createdAt: new Date().toISOString(),
+        });
+
+        await logUserActivity(
+          user.uid,
+          "Account Created",
+          `Welcome! Account registered as ${accountType}.`,
+          "success"
+        );
+      } catch (dbErr) {
+        console.error("Error saving user document in Firestore:", dbErr);
+      }
 
       // 4. Redirect to Dashboard
       router.replace("/dashboard");
@@ -69,13 +98,16 @@ export default function Register() {
       console.error("REGISTRATION ERROR:", err);
 
       if (err?.code === "auth/email-already-in-use") {
-        setError("This email address is already in use.");
+        setIsEmailExists(true);
+        setError("This email address is already registered in NepalFi.");
       } else if (err?.code === "auth/invalid-email") {
         setError("Please enter a valid email address.");
       } else if (err?.code === "auth/weak-password") {
-        setError("Password is too weak.");
+        setError("Password is too weak. Please enter at least 8 characters.");
+      } else if (err?.code === "auth/network-request-failed") {
+        setError("Network connection error. Check your connection.");
       } else {
-        setError("Failed to create account. Please try again.");
+        setError(err?.message || "Failed to create account. Please try again.");
       }
 
       setLoading(false);
@@ -92,43 +124,63 @@ export default function Register() {
 
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: "select_account",
+      });
 
       // Open Google sign-in popup
       const result = await signInWithPopup(auth, provider);
-
       const user = result.user;
 
-      // Save Google user information in Firestore
-      await setDoc(
-        doc(db, "users", user.uid),
-        {
-          uid: user.uid,
-          fullName: user.displayName || "Google User",
-          email: user.email || "",
-          accountType,
-          provider: "google",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          merge: true,
-        }
-      );
+      // Save Google user details in Firestore
+      try {
+        await setDoc(
+          doc(db, "users", user.uid),
+          {
+            uid: user.uid,
+            fullName: user.displayName || user.email?.split("@")[0] || "Google User",
+            email: user.email || "",
+            accountType,
+            provider: "google",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            merge: true,
+          }
+        );
+
+        await logUserActivity(
+          user.uid,
+          "Google Signup",
+          `Registered with Google as ${accountType}.`,
+          "success"
+        );
+      } catch (dbErr) {
+        console.error("Firestore user doc save error during Google signup:", dbErr);
+      }
 
       // Redirect to Dashboard
       router.replace("/dashboard");
     } catch (err: any) {
       console.error("GOOGLE REGISTRATION ERROR:", err);
 
-      if (err?.code === "auth/popup-closed-by-user") {
-        setError("Google sign-in was cancelled.");
+      if (
+        err?.code === "auth/popup-closed-by-user" ||
+        err?.code === "auth/cancelled-popup-request"
+      ) {
+        setError("Google sign-in popup was closed before completing.");
       } else if (err?.code === "auth/popup-blocked") {
-        setError("Google sign-in popup was blocked. Please allow popups.");
+        setError("Google sign-in popup was blocked by your browser. Please enable popups.");
       } else if (err?.code === "auth/account-exists-with-different-credential") {
         setError(
           "An account already exists with this email using another sign-in method."
         );
+      } else if (err?.code === "auth/unauthorized-domain") {
+        setError("This domain is not authorized in your Firebase console for Google Sign-In.");
+      } else if (err?.code === "auth/network-request-failed") {
+        setError("Network error. Please check your internet connection.");
       } else {
-        setError("Failed to sign up with Google. Please try again.");
+        setError(err?.message || "Failed to sign up with Google. Please try again.");
       }
 
       setGoogleLoading(false);
@@ -153,8 +205,18 @@ export default function Register() {
 
           {/* ERROR */}
           {error && (
-            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-center text-xs font-semibold text-red-600">
-              {error}
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-xs font-semibold text-red-600 shadow-sm">
+              <p>{error}</p>
+              {isEmailExists && (
+                <div className="mt-3 pt-3 border-t border-red-200">
+                  <Link
+                    href={`/login${email ? `?email=${encodeURIComponent(email)}` : ""}`}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-red-700 active:scale-95 transition"
+                  >
+                    Click here to Log in instead
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 

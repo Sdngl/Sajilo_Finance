@@ -1,22 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { logUserActivity } from "@/lib/services/activityService";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const [email, setEmail] = useState(searchParams.get("email") || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  // Redirect to dashboard if user is already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace("/dashboard");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
+  // Helper to ensure user doc exists & log activity
+  const handleUserSession = async (user: any) => {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          fullName: user.displayName || user.email?.split("@")[0] || "User",
+          email: user.email || "",
+          accountType: "Personal account",
+          provider: user.providerData?.[0]?.providerId || "email",
+          createdAt: new Date().toISOString(),
+        });
+      }
+
+      await logUserActivity(
+        user.uid,
+        "User Login",
+        "Logged in to NepalFi dashboard.",
+        "info"
+      );
+    } catch (err) {
+      console.error("Error updating user session doc:", err);
+    }
+  };
 
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,18 +66,20 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      await handleUserSession(userCred.user);
       router.replace("/dashboard");
     } catch (err: any) {
       console.error("EMAIL LOGIN ERROR:", err);
       if (
         err?.code === "auth/invalid-credential" ||
         err?.code === "auth/user-not-found" ||
-        err?.code === "auth/wrong-password"
+        err?.code === "auth/wrong-password" ||
+        err?.code === "auth/invalid-email"
       ) {
         setError("Invalid email or password.");
       } else {
-        setError("Login failed. Check your credentials.");
+        setError("Login failed. Please check your network and credentials.");
       }
       setLoading(false);
     }
@@ -51,11 +95,16 @@ export default function Login() {
         prompt: "select_account",
       });
 
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      await handleUserSession(result.user);
       router.replace("/dashboard");
     } catch (err: any) {
       console.error("GOOGLE LOGIN ERROR:", err);
-      setError("Google Sign-In failed.");
+      if (err?.code === "auth/popup-closed-by-user") {
+        setError("Google sign-in was cancelled.");
+      } else {
+        setError("Google Sign-In failed. Please try again.");
+      }
       setLoading(false);
     }
   };
@@ -147,5 +196,17 @@ export default function Login() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={
+      <main className="grid min-h-screen place-items-center bg-[#f8faf9] p-5">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#139b70] border-t-transparent" />
+      </main>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
