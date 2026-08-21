@@ -1,5 +1,146 @@
-export const transactions=[{date:'Today, 10:32 AM',description:'Khalti payment',category:'Transfer',type:'Expense',amount:'- Rs. 1,250',status:'Completed'},{date:'Yesterday, 6:15 PM',description:'Salary credit',category:'Income',type:'Income',amount:'+ Rs. 48,000',status:'Completed'},{date:'Jun 18, 2:40 PM',description:'Daraz purchase',category:'Shopping',type:'Expense',amount:'- Rs. 3,499',status:'Completed'},{date:'Jun 17, 9:10 AM',description:'Electricity Bill',category:'Utilities',type:'Expense',amount:'- Rs. 2,180',status:'Completed'},{date:'Jun 15, 12:22 PM',description:'Grocery run',category:'Food',type:'Expense',amount:'- Rs. 4,250',status:'Completed'}];
-export const savingsGoals=[{name:'Emergency Fund',current:35000,target:100000,progress:35,deadline:'Dec 2026',monthly:'Rs. 2,000'},{name:'New Laptop',current:45000,target:120000,progress:37.5,deadline:'Mar 2027',monthly:'Rs. 3,000'},{name:'Travel',current:20000,target:80000,progress:25,deadline:'Oct 2026',monthly:'Rs. 2,500'}];
-export const products=[{name:'Arabica Coffee Beans',sku:'COF-001',category:'Raw material',stock:24,price:'Rs. 1,200',status:'In stock'},{name:'House Blend 250g',sku:'COF-004',category:'Packaged',stock:6,price:'Rs. 650',status:'Low stock'},{name:'Cold Brew Bottle',sku:'DRK-008',category:'Beverage',stock:0,price:'Rs. 450',status:'Out of stock'}];
-export const customers=[{name:'Aarav Shrestha',phone:'9841 234 567',purchases:'Rs. 24,500',paid:'Rs. 18,000',due:'Rs. 6,500',status:'Due'},{name:'Maya Trading Co.',phone:'9802 445 122',purchases:'Rs. 86,200',paid:'Rs. 86,200',due:'Rs. 0',status:'Paid'},{name:'Suman Karki',phone:'9818 901 332',purchases:'Rs. 12,800',paid:'Rs. 8,000',due:'Rs. 4,800',status:'Overdue'}];
-export const lessons=[{title:'How to identify a fake payment request',tag:'Digital Payments',time:'6 min',progress:80},{title:'Understanding compound savings',tag:'Saving Money',time:'8 min',progress:45},{title:'How to create a monthly budget',tag:'Budgeting',time:'5 min',progress:0},{title:'How QR payment scams work',tag:'Online Scams',time:'7 min',progress:20}];
+export const transactions = [
+  {
+    date: "Today, 10:32 AM",
+    description: "Khalti payment",
+    category: "Transfer",
+    type: "Expense",
+    amount: "- Rs. 1,250",
+    status: "Completed",
+  },
+  {
+    date: "Yesterday, 6:15 PM",
+    description: "Salary credit",
+    category: "Income",
+    type: "Income",
+    amount: "+ Rs. 48,000",
+    status: "Completed",
+  },
+  {
+    date: "Jun 18, 2:40 PM",
+    description: "Daraz purchase",
+    category: "Shopping",
+    type: "Expense",
+    amount: "- Rs. 3,499",
+    status: "Completed",
+  },
+  {
+    date: "Jun 17, 9:10 AM",
+    description: "Electricity Bill",
+    category: "Utilities",
+    type: "Expense",
+    amount: "- Rs. 2,180",
+    status: "Completed",
+  },
+  {
+    date: "Jun 15, 12:22 PM",
+    description: "Grocery run",
+    category: "Food",
+    type: "Expense",
+    amount: "- Rs. 4,250",
+    status: "Completed",
+  },
+];
+export const savingsGoals = [
+  {
+    name: "Emergency Fund",
+    current: 35000,
+    target: 100000,
+    progress: 35,
+    deadline: "Dec 2026",
+    monthly: "Rs. 2,000",
+  },
+  {
+    name: "New Laptop",
+    current: 45000,
+    target: 120000,
+    progress: 37.5,
+    deadline: "Mar 2027",
+    monthly: "Rs. 3,000",
+  },
+  {
+    name: "Travel",
+    current: 20000,
+    target: 80000,
+    progress: 25,
+    deadline: "Oct 2026",
+    monthly: "Rs. 2,500",
+  },
+];
+export const products = [
+  {
+    name: "Arabica Coffee Beans",
+    sku: "COF-001",
+    category: "Raw material",
+    stock: 24,
+    price: "Rs. 1,200",
+    status: "In stock",
+  },
+  {
+    name: "House Blend 250g",
+    sku: "COF-004",
+    category: "Packaged",
+    stock: 6,
+    price: "Rs. 650",
+    status: "Low stock",
+  },
+  {
+    name: "Cold Brew Bottle",
+    sku: "DRK-008",
+    category: "Beverage",
+    stock: 0,
+    price: "Rs. 450",
+    status: "Out of stock",
+  },
+];
+export const customers = [
+  {
+    name: "Aarav Shrestha",
+    phone: "9841 234 567",
+    purchases: "Rs. 24,500",
+    paid: "Rs. 18,000",
+    due: "Rs. 6,500",
+    status: "Due",
+  },
+  {
+    name: "Maya Trading Co.",
+    phone: "9802 445 122",
+    purchases: "Rs. 86,200",
+    paid: "Rs. 86,200",
+    due: "Rs. 0",
+    status: "Paid",
+  },
+  {
+    name: "Suman Karki",
+    phone: "9818 901 332",
+    purchases: "Rs. 12,800",
+    paid: "Rs. 8,000",
+    due: "Rs. 4,800",
+    status: "Overdue",
+  },
+];
+export const lessons = [
+  {
+    title: "How to identify a fake payment request",
+    tag: "Digital Payments",
+    time: "6 min",
+    progress: 80,
+  },
+  {
+    title: "Understanding compound savings",
+    tag: "Saving Money",
+    time: "8 min",
+    progress: 45,
+  },
+  {
+    title: "How to create a monthly budget",
+    tag: "Budgeting",
+    time: "5 min",
+    progress: 0,
+  },
+  {
+    title: "How QR payment scams work",
+    tag: "Online Scams",
+    time: "7 min",
+    progress: 20,
+  },
+];

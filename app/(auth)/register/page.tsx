@@ -1,1 +1,59 @@
-import Link from 'next/link';export default function Register(){return <main className="grid min-h-screen place-items-center bg-[#f8faf9] p-5"><div className="w-full max-w-md"><Link href="/" className="mb-8 block text-center text-xl font-bold">nepal<span className="text-[#139b70]">fi</span></Link><div className="rounded-2xl border border-[#e7eeeb] bg-white p-7 shadow-xl md:p-9"><h1 className="text-2xl font-bold">Create your account</h1><p className="mt-2 text-sm text-[#71817b]">Start building better money habits today.</p><form className="mt-7 space-y-4"><label className="block text-xs font-semibold">Full name<input placeholder="Navin Shrestha" className="field mt-2"/></label><label className="block text-xs font-semibold">Email<input type="email" placeholder="you@example.com" className="field mt-2"/></label><label className="block text-xs font-semibold">Password<input type="password" placeholder="At least 8 characters" className="field mt-2"/></label><label className="block text-xs font-semibold">Account type<select className="field mt-2"><option>Personal account</option><option>Business account</option></select></label><Link href="/dashboard" className="block rounded-xl bg-[#139b70] py-3 text-center text-sm font-bold text-white">Create account</Link></form><p className="mt-7 text-center text-xs text-[#71817b]">Already have an account? <Link href="/login" className="font-bold text-[#139b70]">Log in</Link></p></div></div></main>}
+import Link from "next/link";
+export default function Register() {
+  return (
+    <main className="grid min-h-screen place-items-center bg-[#f8faf9] p-5">
+      <div className="w-full max-w-md">
+        <Link href="/" className="mb-8 block text-center text-xl font-bold">
+          nepal<span className="text-[#139b70]">fi</span>
+        </Link>
+        <div className="rounded-2xl border border-[#e7eeeb] bg-white p-7 shadow-xl md:p-9">
+          <h1 className="text-2xl font-bold">Create your account</h1>
+          <p className="mt-2 text-sm text-[#71817b]">
+            Start building better money habits today.
+          </p>
+          <form className="mt-7 space-y-4">
+            <label className="block text-xs font-semibold">
+              Full name
+              <input placeholder="Navin Shrestha" className="field mt-2" />
+            </label>
+            <label className="block text-xs font-semibold">
+              Email
+              <input
+                type="email"
+                placeholder="you@example.com"
+                className="field mt-2"
+              />
+            </label>
+            <label className="block text-xs font-semibold">
+              Password
+              <input
+                type="password"
+                placeholder="At least 8 characters"
+                className="field mt-2"
+              />
+            </label>
+            <label className="block text-xs font-semibold">
+              Account type
+              <select className="field mt-2">
+                <option>Personal account</option>
+                <option>Business account</option>
+              </select>
+            </label>
+            <Link
+              href="/dashboard"
+              className="block rounded-xl bg-[#139b70] py-3 text-center text-sm font-bold text-white"
+            >
+              Create account
+            </Link>
+          </form>
+          <p className="mt-7 text-center text-xs text-[#71817b]">
+            Already have an account?{" "}
+            <Link href="/login" className="font-bold text-[#139b70]">
+              Log in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}
