@@ -37,6 +37,26 @@ export default function SmeFeaturesPage() {
     <main className="min-h-screen bg-[#f8faf9]">
       <Navbar />
 
+     
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+        <Link href="/" className="text-xl font-bold">
+          nepal<span className="text-[#139b70]">fi</span>
+        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/smes"
+            className="rounded-xl px-3 py-2 text-sm font-semibold text-[#71817b]"
+          >
+            SME overview
+          </Link>
+          <Link
+            href="/register"
+            className="rounded-xl bg-[#139b70] px-4 py-2.5 text-sm font-bold text-white"
+          >
+            Get started
+          </Link>
+        </div>
+      </nav>
       <section className="mx-auto max-w-6xl px-6 pb-20 pt-14">
         <p className="text-xs font-bold uppercase tracking-[.2em] text-[#139b70]">
           NepalFi for SMEs
