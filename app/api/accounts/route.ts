@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import { connectToDatabase } from "@/lib/dbConnect";
 import { AccountModel } from "@/lib/models/Account";
 
 export async function GET() {
